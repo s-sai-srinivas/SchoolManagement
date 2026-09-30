@@ -1,0 +1,433 @@
+@import "tailwindcss";
+
+:root {
+  /* Premium modern color palette */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 97%;
+  --secondary-foreground: 222 47% 11.2%;
+  --muted: 210 40% 97%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 210 40% 97%;
+  --accent-foreground: 222 47% 11.2%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 94%;
+  --ring: 221 83% 53%;
+  --radius: 1rem;
+
+  /* Semantic color tokens for stats and status indicators */
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 100%;
+  --success-bg: 142 71% 45% / 0.1;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 100%;
+  --warning-bg: 38 92% 50% / 0.1;
+  --info: 217 91% 60%;
+  --info-foreground: 0 0% 100%;
+  --info-bg: 217 91% 60% / 0.1;
+  --error: 0 72% 51%;
+  --error-foreground: 0 0% 100%;
+  --error-bg: 0 72% 51% / 0.1;
+
+  /* Subtle gradients */
+  --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(221 83% 53%) 100%);
+  --gradient-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+}
+
+.dark {
+  /* Refined dark mode palette */
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 13%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 13%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+  --secondary: 217 33% 18%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 33% 18%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 217 33% 18%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 50%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 33% 22%;
+  /* Subtle borders in dark mode */
+  --input: 217 33% 22%;
+  --ring: 217 91% 60%;
+
+  /* Semantic colors for dark mode */
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 100%;
+  --success-bg: 142 71% 45% / 0.15;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 100%;
+  --warning-bg: 38 92% 50% / 0.15;
+  --info: 217 91% 60%;
+  --info-foreground: 0 0% 100%;
+  --info-bg: 217 91% 60% / 0.15;
+  --error: 0 63% 50%;
+  --error-foreground: 0 0% 100%;
+  --error-bg: 0 63% 50% / 0.15;
+
+  --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(221 83% 53%) 100%);
+  --gradient-surface: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background: 
+    linear-gradient(135deg, hsl(210 40% 99%) 0%, hsl(220 30% 98%) 50%, hsl(210 40% 99%) 100%),
+    radial-gradient(circle at 20% 30%, hsl(221 83% 53% / 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, hsl(142 71% 45% / 0.04) 0%, transparent 50%);
+  background-attachment: fixed;
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* Typography system - standardized for consistency */
+/* Page titles: text-3xl font-bold */
+h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
+  line-height: 2.25rem;
+  letter-spacing: -0.01em;
+}
+
+/* Section headers: text-xl font-semibold */
+h2 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600;
+  line-height: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+/* Card titles: text-lg font-semibold */
+h3 {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600;
+  line-height: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+p {
+  line-height: 1.6;
+}
+
+/* Text color hierarchy */
+.text-subtle {
+  color: hsl(var(--muted-foreground) / 0.6);
+}
+
+.text-muted {
+  color: hsl(var(--muted-foreground));
+}
+
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+
+/* Semantic color utilities for stats */
+.bg-success {
+  background-color: hsl(var(--success-bg));
+}
+
+.text-success {
+  color: hsl(var(--success));
+}
+
+.bg-warning {
+  background-color: hsl(var(--warning-bg));
+}
+
+.text-warning {
+  color: hsl(var(--warning));
+}
+
+.bg-info {
+  background-color: hsl(var(--info-bg));
+}
+
+.text-info {
+  color: hsl(var(--info));
+}
+
+.bg-error {
+  background-color: hsl(var(--error-bg));
+}
+
+.text-error {
+  color: hsl(var(--error));
+}
+
+/* Premium 3D card design with glassmorphism */
+.card {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.98) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid hsl(var(--border) / 0.3);
+  box-shadow: 
+    0 1px 2px 0 rgba(0, 0, 0, 0.03),
+    0 4px 8px -2px rgba(0, 0, 0, 0.04),
+    0 8px 16px -4px rgba(0, 0, 0, 0.04),
+    0 16px 32px -8px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    hsl(var(--primary) / 0.4), 
+    hsl(var(--primary) / 0.6),
+    hsl(var(--primary) / 0.4),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    hsl(var(--primary) / 0.1), 
+    hsl(var(--primary) / 0.05),
+    transparent
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.card:hover {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 25px 50px -12px rgba(0, 0, 0, 0.12),
+    0 0 0 1px hsl(var(--primary) / 0.1);
+  transform: translateY(-6px) scale(1.01);
+  border-color: hsl(var(--primary) / 0.4);
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.99) 100%);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+/* Smooth transitions for interactive elements */
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Standardized spacing scale */
+.space-xs { gap: 0.5rem; }
+.space-sm { gap: 0.75rem; }
+.space-md { gap: 1rem; }
+.space-lg { gap: 1.5rem; }
+.space-xl { gap: 2rem; }
+.space-2xl { gap: 3rem; }
+
+/* Better focus states - subtle but visible */
+:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 3px hsl(var(--ring) / 0.3);
+}
+
+/* Minimal scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.15);
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  backdrop-filter: blur(12px) saturate(180%);
+  background: var(--gradient-surface);
+  border: 1px solid hsl(var(--border) / 0.4);
+}
+
+.glass-card {
+  backdrop-filter: blur(12px) saturate(180%);
+  background: hsl(var(--card) / 0.7);
+  border: 1px solid hsl(var(--border) / 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.glass-card:hover {
+  background: hsl(var(--card) / 0.9);
+  border-color: hsl(var(--primary) / 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* Animation keyframes */
+/* Smooth animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gradient Text */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Modern 3D shadow utilities */
+.shadow-3d {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.shadow-3d-lg {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.shadow-glow {
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.15),
+    0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-glow-primary {
+  box-shadow: 
+    0 0 30px hsl(var(--primary) / 0.2),
+    0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Button Styles */
+.btn-primary-gradient {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
+}
+
+.btn-primary-gradient:hover {
+  box-shadow: 0 6px 20px rgba(0, 118, 255, 0.23);
+  transform: translateY(-1px);
+}
