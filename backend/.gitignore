@@ -44,3 +44,6 @@ prisma/migrations/*
 !prisma/migrations/.gitkeep
 
 /generated/prisma
+
+.vercel
+.env*
