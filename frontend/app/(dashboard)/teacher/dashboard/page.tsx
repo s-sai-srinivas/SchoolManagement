@@ -57,7 +57,9 @@ export default function TeacherDashboardPage() {
     
     // Get recent notices
     const { data: noticesData } = useNotices({ take: 5 })
-    const recentNotices = Array.isArray(noticesData?.data) ? noticesData.data : []
+    const recentNotices = Array.isArray(noticesData?.data?.data)
+        ? noticesData.data.data
+        : Array.isArray(noticesData?.data) ? noticesData.data : []
 
     if (loadingUser) {
         return (

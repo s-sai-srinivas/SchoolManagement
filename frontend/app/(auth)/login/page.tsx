@@ -42,7 +42,7 @@ export default function LoginPage() {
                 ADMIN: '/admin/dashboard',
                 TEACHER: '/teacher/dashboard',
                 PARENT: '/parent/dashboard',
-                STUDENT: '/student/dashboard',
+                STUDENT: '/dashboard',
             }
 
             router.push(roleRoutes[user.role as keyof typeof roleRoutes] || '/dashboard')

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -20,8 +20,11 @@ import { format } from "date-fns"
 export default function ParentHomeworkPage() {
     const { data: currentUser, isLoading: loadingUser } = useCurrentUser()
     const children = currentUser?.children || []
-    const firstChildId = children[0]?.studentId || children[0]?.student?.id
-    const [selectedChildId, setSelectedChildId] = useState<string>(firstChildId || "")
+    const firstChildId = children[0]?.id || children[0]?.studentId || children[0]?.student?.id
+    const [selectedChildId, setSelectedChildId] = useState<string>("")
+    useEffect(() => {
+        if (!selectedChildId && firstChildId) setSelectedChildId(firstChildId)
+    }, [firstChildId, selectedChildId])
     
     const { data: homeworkData, isLoading: loadingHomework } = useHomeworkByStudent(selectedChildId)
     const homework = homeworkData?.data || []

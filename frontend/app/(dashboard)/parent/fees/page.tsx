@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -32,8 +32,11 @@ import { feeApi } from "@/lib/api/endpoints"
 export default function ParentFeesPage() {
     const { data: currentUser, isLoading: loadingUser } = useCurrentUser()
     const children = currentUser?.children || []
-    const firstChildId = children[0]?.studentId || children[0]?.student?.id
-    const [selectedChildId, setSelectedChildId] = useState<string>(firstChildId || "")
+    const firstChildId = children[0]?.id || children[0]?.studentId || children[0]?.student?.id
+    const [selectedChildId, setSelectedChildId] = useState<string>("")
+    useEffect(() => {
+        if (!selectedChildId && firstChildId) setSelectedChildId(firstChildId)
+    }, [firstChildId, selectedChildId])
     
     const { data: pendingFeesData, isLoading: loadingPending } = usePendingFees(selectedChildId)
     const { data: paymentsData, isLoading: loadingPayments } = useFeePayments({ studentId: selectedChildId })
@@ -170,7 +173,7 @@ export default function ParentFeesPage() {
                             <CardContent>
                                 <div className="text-2xl font-bold">₹{(totalPaid / 100).toLocaleString()}</div>
                                 <p className="text-xs text-muted-foreground">
-                                    {Math.floor((totalPaid / annualFee) * installments)} installment(s)
+                                    {annualFee > 0 ? Math.floor((totalPaid / annualFee) * installments) : 0} installment(s)
                                 </p>
                             </CardContent>
                         </Card>
@@ -183,7 +186,7 @@ export default function ParentFeesPage() {
                             <CardContent>
                                 <div className="text-2xl font-bold">₹{(outstanding / 100).toLocaleString()}</div>
                                 <p className="text-xs text-muted-foreground">
-                                    {Math.ceil((outstanding / annualFee) * installments)} installment(s) pending
+                                    {annualFee > 0 ? Math.ceil((outstanding / annualFee) * installments) : 0} installment(s) pending
                                 </p>
                             </CardContent>
                         </Card>

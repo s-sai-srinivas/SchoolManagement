@@ -8,8 +8,8 @@ import { PageHeader } from "@/components/layout/page-header"
 import { StatsCard } from "@/components/common/stats-card"
 import { useCurrentUser } from "@/lib/hooks/use-current-user"
 import { useStudents } from "@/lib/hooks/use-students"
-import { useHomeworkByStudent } from "@/lib/hooks/use-homework"
-import { usePendingFees } from "@/lib/hooks/use-fees"
+import { feeApi } from "@/lib/api/endpoints"
+import { useQueries } from "@tanstack/react-query"
 import { useNotices } from "@/lib/hooks/use-notices"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/common/empty-state"
@@ -27,15 +27,22 @@ export default function ParentDashboardPage() {
     
     // Get notices
     const { data: noticesData } = useNotices({ take: 5 })
-    const recentNotices = noticesData?.data || []
+    const recentNotices = Array.isArray(noticesData?.data?.data)
+        ? noticesData.data.data
+        : Array.isArray(noticesData?.data) ? noticesData.data : []
 
-    // Calculate pending fees for all children
-    const feeQueries = children.map((child: any) => {
-        const studentId = child.studentId || child.id
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        return studentId ? usePendingFees(studentId) : null
-    }).filter(Boolean)
-    
+    // Calculate pending fees for all children (useQueries keeps hook count stable)
+    const feeQueries = useQueries({
+        queries: children.map((child: any) => {
+            const studentId = child.studentId || child.id
+            return {
+                queryKey: ['fees', 'pending', studentId],
+                queryFn: () => feeApi.getPendingByStudent(studentId),
+                enabled: !!studentId,
+            }
+        }),
+    })
+
     const allPendingFees = feeQueries.flatMap((query: any) => query?.data?.data || [])
     const totalPendingFees = allPendingFees.reduce((sum: number, fee: any) => sum + (fee.amountPaise || 0), 0)
 

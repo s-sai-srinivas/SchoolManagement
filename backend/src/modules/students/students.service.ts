@@ -39,7 +39,7 @@ export class StudentsService {
     }
 
     async findAll(queryStudentsDto: QueryStudentsDto) {
-        const { class: className, section, schoolId, search } = queryStudentsDto;
+        const { class: className, section, schoolId, search, parentId } = queryStudentsDto;
 
         const students = await this.prisma.student.findMany({
             where: {
@@ -47,6 +47,7 @@ export class StudentsService {
                 ...(className && { class: className }),
                 ...(section && { section }),
                 ...(schoolId && { schoolId }),
+                ...(parentId && { parents: { some: { parentId } } }),
                 ...(search && {
                     OR: [
                         { name: { contains: search, mode: 'insensitive' } },
@@ -81,7 +82,16 @@ export class StudentsService {
         return { count };
     }
 
-    async findOne(id: string) {
+    async findOne(id: string, user?: any) {
+        if (user?.role === 'PARENT') {
+            const link = await this.prisma.studentParent.findFirst({
+                where: { parentId: user.id, studentId: id },
+            });
+            if (!link) {
+                throw new NotFoundException(`Student with ID ${id} not found`);
+            }
+        }
+
         const student = await this.prisma.student.findFirst({
             where: {
                 id,

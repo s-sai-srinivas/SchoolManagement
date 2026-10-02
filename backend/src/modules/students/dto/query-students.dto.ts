@@ -16,4 +16,8 @@ export class QueryStudentsDto {
     @IsOptional()
     @IsString()
     search?: string;
+
+    @IsOptional()
+    @IsUUID()
+    parentId?: string;
 }

@@ -4,6 +4,7 @@ import {
     ConflictException,
     UnauthorizedException,
     BadRequestException,
+    ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateFeeStructureDto } from './dto/create-fee-structure.dto';
@@ -108,7 +109,16 @@ export class FeesService {
 
     // ====== PAYMENTS ======
 
-    async getPendingFees(studentId: string) {
+    async getPendingFees(studentId: string, user?: any) {
+        if (user?.role === 'PARENT') {
+            const link = await this.prisma.studentParent.findFirst({
+                where: { parentId: user.id, studentId },
+            });
+            if (!link) {
+                throw new ForbiddenException('Not authorized to view this student');
+            }
+        }
+
         const student = await this.prisma.student.findFirst({
             where: { id: studentId, deletedAt: null },
             include: {
@@ -170,7 +180,16 @@ export class FeesService {
         };
     }
 
-    async createPaymentOrder(createPaymentOrderDto: CreatePaymentOrderDto) {
+    async createPaymentOrder(createPaymentOrderDto: CreatePaymentOrderDto, user?: any) {
+        if (user?.role === 'PARENT') {
+            const link = await this.prisma.studentParent.findFirst({
+                where: { parentId: user.id, studentId: createPaymentOrderDto.studentId },
+            });
+            if (!link) {
+                throw new ForbiddenException('Not authorized to pay for this student');
+            }
+        }
+
         const student = await this.prisma.student.findFirst({
             where: {
                 id: createPaymentOrderDto.studentId,
@@ -307,7 +326,16 @@ export class FeesService {
         throw new Error('Razorpay signature verification not implemented');
     }
 
-    async getPaymentReceipt(id: string) {
+    async getPaymentReceipt(id: string, user?: any) {
+        if (user?.role === 'PARENT') {
+            const link = await this.prisma.studentParent.findFirst({
+                where: { parentId: user.id, student: { feePayments: { some: { id } } } },
+            });
+            if (!link) {
+                throw new ForbiddenException('Not authorized to view this receipt');
+            }
+        }
+
         const payment = await this.prisma.feePayment.findUnique({
             where: { id },
             include: {
@@ -414,12 +442,26 @@ export class FeesService {
         };
     }
 
-    async listPayments(queryPaymentsDto: QueryPaymentsDto) {
+    async listPayments(queryPaymentsDto: QueryPaymentsDto, user?: any) {
         const { studentId, schoolId, status } = queryPaymentsDto;
+
+        // Parents can only see payments for their own children
+        let childIds: string[] | undefined;
+        if (user?.role === 'PARENT') {
+            const links = await this.prisma.studentParent.findMany({
+                where: { parentId: user.id },
+                select: { studentId: true },
+            });
+            childIds = links.map((l) => l.studentId);
+            if (studentId && !childIds.includes(studentId)) {
+                return [];
+            }
+        }
 
         const payments = await this.prisma.feePayment.findMany({
             where: {
                 ...(studentId && { studentId }),
+                ...(childIds && !studentId && { studentId: { in: childIds } }),
                 ...(status && { status }),
                 ...(schoolId && {
                     student: {
