@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
     LayoutDashboard,
@@ -19,6 +19,8 @@ import {
 } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
 import { Button } from "@/components/ui/button"
+import { authApi } from "@/lib/api/auth"
+import Cookies from "js-cookie"
 
 const sidebarItems = [
     {
@@ -75,6 +77,15 @@ const sidebarItems = [
 
 export function Sidebar() {
     const pathname = usePathname()
+    const router = useRouter()
+
+    const handleLogout = async () => {
+        const refreshToken = Cookies.get('refreshToken')
+        if (refreshToken) {
+            await authApi.logout(refreshToken)
+        }
+        router.push('/login')
+    }
 
     return (
         <div className="flex h-full w-64 flex-col border-r border-border/15 bg-card/30 backdrop-blur-sm">
@@ -121,6 +132,7 @@ export function Sidebar() {
             <div className="border-t border-border/15 p-3">
                 <Button
                     variant="ghost"
+                    onClick={handleLogout}
                     className="w-full justify-start gap-2.5 text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200"
                 >
                     <LogOut className="h-4 w-4" />

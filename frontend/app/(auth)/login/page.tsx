@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/lib/stores/auth-store'
 import { authApi } from '@/lib/api/endpoints'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,6 +15,7 @@ import { School, Loader2, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
     const router = useRouter()
+    const queryClient = useQueryClient()
     const { setAuth } = useAuthStore()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
@@ -33,6 +35,7 @@ export default function LoginPage() {
             const response = await authApi.login(formData.email, formData.password, formData.role)
             const { user, accessToken, refreshToken } = response.data
 
+            queryClient.clear()
             setAuth(user, accessToken, refreshToken)
 
             const roleRoutes = {
